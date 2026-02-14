@@ -176,21 +176,19 @@
 </head>
 <body>
 
-    <audio id="musicaFondo" loop>
+    <audio id="musicaFondo" loop preload="auto">
         <source src="audios/fondo.mp3" type="audio/mpeg">
     </audio>
-    <audio id="audioFrase1">
+    <audio id="audioFrase1" preload="auto">
         <source src="audios/audio1.mp3" type="audio/mpeg">
     </audio>
-    <audio id="audioFrase2">
+    <audio id="audioFrase2" preload="auto">
         <source src="audios/audio2.mp3" type="audio/mpeg">
     </audio>
 
     <div class="aviso-girar">
         <p style="color: #a0c8ff; font-size: 1.2rem; margin-bottom: 10px; font-weight: 600;">Toca la pantalla blo</p>
-        
         <i class="fas fa-mobile-alt icono-movil"></i>
-        
         <h2 style="color: white; font-weight: 600;">Gira la pantalla mi bro feotee 🥺</h2>
     </div>
 
@@ -240,23 +238,29 @@
         let frase1Sonada = false;
         let frase2Sonada = false;
 
-        function iniciarFondo() {
+        // Función robusta para despertar el audio en móviles
+        function activarSonidos() {
             if (!fondoIniciado) {
-                fondo.play().catch(e => console.log("Audio en espera..."));
-                fondoIniciado = true;
+                fondo.load(); // Forzamos carga
+                fondo.play().then(() => {
+                    fondoIniciado = true;
+                }).catch(e => console.log("Esperando interacción real..."));
             }
         }
 
-        document.addEventListener('touchstart', iniciarFondo);
-        document.addEventListener('mousedown', iniciarFondo);
+        // Detecta toque en cualquier lado
+        document.addEventListener('touchstart', activarSonidos);
+        document.addEventListener('mousedown', activarSonidos);
 
         range.addEventListener('input', (e) => {
-            iniciarFondo();
+            activarSonidos(); // Reintento por si acaso
             
             const val = parseInt(e.target.value);
             const progreso = val / 100;
 
-            if (val > 0 && !frase1Sonada) {
+            // Audio 1: Se dispara al mover el corazón
+            if (val > 5 && !frase1Sonada) {
+                a1.load();
                 a1.play();
                 frase1Sonada = true;
             }
@@ -269,6 +273,7 @@
             m2.style.transform = `translateX(${progreso * 5}px)`;
 
             if (val === 100 && !frase2Sonada) {
+                a2.load();
                 a2.play();
                 frase2Sonada = true;
             } else if (val < 90) {
@@ -277,5 +282,4 @@
         });
     </script>
 </body>
-
 </html>
