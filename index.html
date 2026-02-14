@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi mejor amigo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700;800&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a1a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .aviso-girar {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .icono-movil {
+            font-size: 4rem;
+            color: #8aa6c2;
+            margin-bottom: 25px;
+            animation: rotarMovil 2.5s infinite ease-in-out;
+        }
+
+        @keyframes rotarMovil {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(-90deg); }
+            70% { transform: rotate(-90deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @media (orientation: portrait) {
+            .aviso-girar { display: flex; }
+            .wrapper-todo { display: none; }
+        }
+
+        .wrapper-todo { width: 100%; max-width: 850px; }
+
+        .nueva-cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 0 5px;
+        }
+
+        .txt-vida { font-size: 1.4rem; color: #8aa6c2; font-weight: 800; }
+        .txt-desliza { 
+            font-size: 0.9rem; 
+            color: #a0c8ff; 
+            font-weight: 500; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            padding-right: 15px; 
+        }
+
+        .flecha { 
+            animation: bounce 1.5s infinite; 
+            font-size: 1.2rem; 
+            color: #fff;
+            font-weight: 900; 
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        .card-negra {
+            background: #000;
+            padding: 10px;
+            border-radius: 30px;
+            border: 2px solid #222;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: 500px;
+            position: relative;
+        }
+
+        .marco-azul {
+            background: #b8d0e8;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #8aa6c2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .zona-animacion { position: relative; flex-grow: 1; width: 100%; }
+        .pj { position: absolute; bottom: 0; height: 85%; z-index: 20; }
+        #geto { left: 0; }
+        #gojo { right: -8%; } 
+
+        .burbuja-texto {
+            position: absolute;
+            padding: 8px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+            font-family: 'Dancing Script', cursive;
+            font-weight: 800;
+            pointer-events: none;
+            z-index: 5;
+            top: 52%; 
+        }
+
+        #m1 {
+            background: #fff8f0;
+            border: 1px solid #e8d0b0;
+            color: #2c1810;
+            left: 266px; 
+            font-size: 1.4rem;
+        }
+
+        #m2 {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            left: 10px; 
+            opacity: 0;
+            font-size: 1.8rem;
+        }
+
+        .slider-container {
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pista { width: 85%; height: 8px; background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+        .corazon-thumb {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            border: 4px solid #1a5fd8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            left: 7.5%; 
+            transform: translate(-50%, 0);
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .input-invisible { position: absolute; width: 85%; height: 50px; opacity: 0; cursor: pointer; z-index: 40; }
+    </style>
+</head>
+<body>
+
+    <audio id="musicaFondo" loop>
+        <source src="fondo.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audioFrase1">
+        <source src="audio1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audioFrase2">
+        <source src="audio2.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="aviso-girar">
+        <p style="color: #a0c8ff; font-size: 1.2rem; margin-bottom: 10px; font-weight: 600;">Toca la pantalla blo</p>
+        
+        <i class="fas fa-mobile-alt icono-movil"></i>
+        
+        <h2 style="color: white; font-weight: 600;">Gira la pantalla mi bro feotee 🥺</h2>
+    </div>
+
+    <div class="wrapper-todo">
+        <div class="nueva-cabecera">
+            <div class="txt-vida">En esta vida...</div>
+            <div class="txt-desliza">
+                Desliza el corazón mailove ☺️ <span class="flecha">⬇</span>
+            </div>
+        </div>
+        
+        <div class="card-negra">
+            <div class="marco-azul">
+                <div class="zona-animacion">
+                    <div class="burbuja-texto" id="m1">"Tú siempre serás mi mejor amigo"</div>
+                    <div class="burbuja-texto" id="m2">"el único que he tenido"</div>
+
+                    <img src="geto.png" id="geto" class="pj">
+                    <img src="gojo.png" id="gojo" class="pj">
+                </div>
+
+                <div class="slider-container">
+                    <div class="pista"></div>
+                    <div class="corazon-thumb" id="thumb"><i class="fas fa-heart" style="color:#1a5fd8"></i></div>
+                    <input type="range" min="0" max="100" value="0" class="input-invisible" id="range">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const range = document.getElementById('range');
+        const thumb = document.getElementById('thumb');
+        const geto = document.getElementById('geto');
+        const m1 = document.getElementById('m1');
+        const m2 = document.getElementById('m2');
+        
+        const fondo = document.getElementById('musicaFondo');
+        const a1 = document.getElementById('audioFrase1');
+        const a2 = document.getElementById('audioFrase2');
+
+        fondo.volume = 0.13;
+        a1.volume = 1.0;
+        a2.volume = 1.0;
+
+        let fondoIniciado = false;
+        let frase1Sonada = false;
+        let frase2Sonada = false;
+
+        function iniciarFondo() {
+            if (!fondoIniciado) {
+                fondo.play().catch(e => console.log("Audio en espera..."));
+                fondoIniciado = true;
+            }
+        }
+
+        document.addEventListener('touchstart', iniciarFondo);
+        document.addEventListener('mousedown', iniciarFondo);
+
+        range.addEventListener('input', (e) => {
+            iniciarFondo();
+            
+            const val = parseInt(e.target.value);
+            const progreso = val / 100;
+
+            if (val > 0 && !frase1Sonada) {
+                a1.play();
+                frase1Sonada = true;
+            }
+
+            thumb.style.left = (7.5 + (val * 0.85)) + '%';
+            geto.style.left = (46 * progreso) + '%';
+            m1.style.left = (266 + (val * 1.1)) + 'px';
+            m1.style.opacity = 1 - (progreso * 1.5);
+            m2.style.opacity = progreso;
+            m2.style.transform = `translateX(${progreso * 5}px)`;
+
+            if (val === 100 && !frase2Sonada) {
+                a2.play();
+                frase2Sonada = true;
+            } else if (val < 90) {
+                frase2Sonada = false;
+            }
+        });
+    </script>
+</body>
+</html>
