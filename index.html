@@ -220,66 +220,71 @@
     </div>
 
     <script>
-        const range = document.getElementById('range');
-        const thumb = document.getElementById('thumb');
-        const geto = document.getElementById('geto');
-        const m1 = document.getElementById('m1');
-        const m2 = document.getElementById('m2');
+    const range = document.getElementById('range');
+    const thumb = document.getElementById('thumb');
+    const geto = document.getElementById('geto');
+    const m1 = document.getElementById('m1');
+    const m2 = document.getElementById('m2');
+    
+    const fondo = document.getElementById('musicaFondo');
+    const a1 = document.getElementById('audioFrase1');
+    const a2 = document.getElementById('audioFrase2');
+
+    // Subido al 30% como pediste
+    fondo.volume = 0.3; 
+    a1.volume = 1.0;
+    a2.volume = 1.0;
+
+    let fondoIniciado = false;
+    let frase1Sonada = false;
+    let frase2Sonada = false;
+
+    // Esta función es ahora más "agresiva" para despertar el audio
+    function activarTodoElAudio() {
+        if (!fondoIniciado) {
+            // Esto "despierta" el motor de audio del móvil
+            fondo.play().then(() => {
+                fondoIniciado = true;
+                console.log("Audio de fondo iniciado correctamente");
+            }).catch(error => {
+                // Si falla por seguridad, reintentamos con un toque directo
+                console.log("Reintentando audio...");
+            });
+        }
+    }
+
+    // Escuchar toques en TODO el documento
+    document.body.addEventListener('touchstart', activarTodoElAudio);
+    document.body.addEventListener('click', activarTodoElAudio);
+
+    range.addEventListener('input', (e) => {
+        // Asegurar que el fondo suene si no ha sonado ya
+        activarTodoElAudio();
         
-        const fondo = document.getElementById('musicaFondo');
-        const a1 = document.getElementById('audioFrase1');
-        const a2 = document.getElementById('audioFrase2');
+        const val = parseInt(e.target.value);
+        const progreso = val / 100;
 
-        fondo.volume = 0.13;
-        a1.volume = 1.0;
-        a2.volume = 1.0;
-
-        let fondoIniciado = false;
-        let frase1Sonada = false;
-        let frase2Sonada = false;
-
-        // Función robusta para despertar el audio en móviles
-        function activarSonidos() {
-            if (!fondoIniciado) {
-                fondo.load(); // Forzamos carga
-                fondo.play().then(() => {
-                    fondoIniciado = true;
-                }).catch(e => console.log("Esperando interacción real..."));
-            }
+        // Audio 1
+        if (val > 5 && !frase1Sonada) {
+            a1.play().catch(e => console.log("Audio 1 bloqueado"));
+            frase1Sonada = true;
         }
 
-        // Detecta toque en cualquier lado
-        document.addEventListener('touchstart', activarSonidos);
-        document.addEventListener('mousedown', activarSonidos);
+        thumb.style.left = (7.5 + (val * 0.85)) + '%';
+        geto.style.left = (46 * progreso) + '%';
+        m1.style.left = (266 + (val * 1.1)) + 'px';
+        m1.style.opacity = 1 - (progreso * 1.5);
+        m2.style.opacity = progreso;
+        m2.style.transform = `translateX(${progreso * 5}px)`;
 
-        range.addEventListener('input', (e) => {
-            activarSonidos(); // Reintento por si acaso
-            
-            const val = parseInt(e.target.value);
-            const progreso = val / 100;
-
-            // Audio 1: Se dispara al mover el corazón
-            if (val > 5 && !frase1Sonada) {
-                a1.load();
-                a1.play();
-                frase1Sonada = true;
-            }
-
-            thumb.style.left = (7.5 + (val * 0.85)) + '%';
-            geto.style.left = (46 * progreso) + '%';
-            m1.style.left = (266 + (val * 1.1)) + 'px';
-            m1.style.opacity = 1 - (progreso * 1.5);
-            m2.style.opacity = progreso;
-            m2.style.transform = `translateX(${progreso * 5}px)`;
-
-            if (val === 100 && !frase2Sonada) {
-                a2.load();
-                a2.play();
-                frase2Sonada = true;
-            } else if (val < 90) {
-                frase2Sonada = false;
-            }
-        });
-    </script>
+        // Audio 2
+        if (val === 100 && !frase2Sonada) {
+            a2.play().catch(e => console.log("Audio 2 bloqueado"));
+            frase2Sonada = true;
+        } else if (val < 90) {
+            frase2Sonada = false;
+        }
+    });
+</script>
 </body>
 </html>
